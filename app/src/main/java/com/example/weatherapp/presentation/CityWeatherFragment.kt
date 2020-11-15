@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_current_city_weather.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class CityWeatherFragment : Fragment(), CoroutineScope {
     override val coroutineContext = Dispatchers.Main
@@ -26,7 +27,6 @@ class CityWeatherFragment : Fragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-
         searchButton.setOnClickListener {
             val inputCity = inputCity.text.toString()
             val inputCountryCode = inputCountryCode.text.toString()
@@ -39,8 +39,11 @@ class CityWeatherFragment : Fragment(), CoroutineScope {
                 response?.apply {
                     cityName.text = name
                     countryCode.text = sys.country
-                    weatherDescription.text = weather[0].description
-                    weatherTemperature.text = getString(R.string.temperature_format).format(main.temp.toString())
+                    weatherDescription.text = weather[0].description.capitalize(Locale.getDefault())
+
+                    weatherTemperature.text = getString(R.string.temperature_format).format(main.temp)
+                    weatherHumidity.text = getString(R.string.humidity_format).format(main.humidity)
+                    weatherWindSpeed.text = getString(R.string.wind_speed_format).format(wind.speed)
                 }
 
             }

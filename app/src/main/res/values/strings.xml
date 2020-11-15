@@ -4,5 +4,7 @@
     <string name="hint_city">City</string>
     <string name="hint_country">US</string>
 
-    <string name="temperature_format">%s°C</string>
+    <string name="temperature_format">%.2f°C</string>
+    <string name="humidity_format">Humidity: %d%%</string>
+    <string name="wind_speed_format">Wind: %.1f m/s</string>
 </resources>
