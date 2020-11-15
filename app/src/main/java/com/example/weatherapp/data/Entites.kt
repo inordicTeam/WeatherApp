@@ -1,5 +1,8 @@
 package com.example.weatherapp.data
 
+import com.google.gson.annotations.SerializedName
+import java.util.*
+
 data class CityWeatherResponse(
     val name: String,
     val weather: List<WeatherItem>,
@@ -24,4 +27,28 @@ data class CityWeatherResponse(
     data class Wind(
         val speed: Float
     )
+}
+
+data class ForecastResponse(
+    val city: City,
+    val list: List<ListItem>
+) {
+    data class City(
+        val name: String,
+        val country: String
+    )
+
+    data class ListItem(
+        val main: Main,
+        val weather: List<WeatherItem>,
+        @SerializedName("dt_txt") val dateTime: Date
+    ) {
+        data class Main(
+            val temp: Float
+        )
+
+        data class WeatherItem(
+            val description: String
+        )
+    }
 }

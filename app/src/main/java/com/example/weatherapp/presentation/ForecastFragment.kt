@@ -1,32 +1,34 @@
 package com.example.weatherapp.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.weatherapp.R
 import com.example.weatherapp.data.WeatherRepository
-import kotlinx.android.synthetic.main.fragment_current_city_weather.*
 import kotlinx.android.synthetic.main.layout_search.*
+import kotlinx.android.synthetic.main.fragment_forecast.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
-class CityWeatherFragment : Fragment(), CoroutineScope {
+class ForecastFragment : Fragment(), CoroutineScope {
     override val coroutineContext = Dispatchers.Main
     private val repository = WeatherRepository()
+    private val adapter = ForecastsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_current_city_weather, container, false)
+        return inflater.inflate(R.layout.fragment_forecast, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        forecastList.adapter = adapter
 
         searchButton.setOnClickListener {
             val inputCity = inputCity.text.toString()
@@ -36,17 +38,10 @@ class CityWeatherFragment : Fragment(), CoroutineScope {
             if (inputCity.isEmpty() || inputCity.isBlank()) return@setOnClickListener
 
             launch {
-                val response = repository.getCurrentWeatherForCity(inputCity, inputCountryCode)
+                val response = repository.getForecastForCity(inputCity, inputCountryCode)
                 response?.apply {
-                    cityName.text = name
-                    countryCode.text = sys.country
-                    weatherDescription.text = weather[0].description.capitalize(Locale.getDefault())
-
-                    weatherTemperature.text = getString(R.string.temperature_format).format(main.temp)
-                    weatherHumidity.text = getString(R.string.humidity_format).format(main.humidity)
-                    weatherWindSpeed.text = getString(R.string.wind_speed_format).format(wind.speed)
+                    adapter.updateForecasts(list)
                 }
-
             }
 
         }
